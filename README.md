@@ -25,3 +25,13 @@ Ratto di Ferro · Drone Vespa (vola: schiva spada/frusta/baionetta, debole a pis
 - **Bilanciamento**: nemici più forti; AUTO non fa quasi mai colpi PERFETTI e non sempre vince. Con i colpi a tempo e la DIFESA sulla motosega si vince.
 
 Fatto con Phaser 3. © Infinity Frame Studios
+
+## Novità (terzo giro): Stanza di prova "Il Covo"
+Esplorazione in stile JRPG anni '90 (la nostra versione, nessun materiale preso da altri giochi).
+Si apre dal pulsante **🚪 STANZA DI PROVA** nel menu, oppure direttamente: `stanza/`.
+- Sfondo dipinto "pre-renderizzato" con inquadratura fissa, Ras e Kiri come personaggi 3D low-poly (Three.js) che diventano più grandi quando si avvicinano.
+- Area calpestabile invisibile con percorso automatico; il personaggio passa **dietro** al tavolo del grammofono e al tubo (livelli ritagliati dallo sfondo).
+- Tocca il pavimento per camminare, oppure tieni premuto e trascina per il joystick. Sul computer: frecce/WASD, Invio o Spazio per interagire.
+- Il **!** sopra la testa indica qualcosa da guardare: Kiri, il grammofono (cambia la musica), le casse dei Varga, la porta.
+- La porta porta direttamente alla battaglia nel Vicolo Neon (`?lotta=1`).
+- Musica d'ambiente generata dal browser (pioggia, pad, carillon), passi sul legno.

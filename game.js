@@ -53,7 +53,7 @@ class Boot extends Phaser.Scene{constructor(){super('boot')}
   g.clear();g.fillStyle(0xffd34d,1).fillRect(0,0,8,4);g.generateTexture('shell',8,4);g.destroy();
   Object.entries(HEROES).forEach(([k,d])=>{const src=this.textures.get(k).getSourceImage(),c=this.textures.createCanvas('por_'+k,96,96),x=c.getContext();
    const s=d.por[2]*src.width,cx=d.por[0]*src.width,cy=d.por[1]*src.height;x.fillStyle='#1a0630';x.fillRect(0,0,96,96);x.drawImage(src,cx-s/2,cy-s/2,s,s,0,0,96,96);c.refresh()});
-  this.scene.start('title')}}
+  this.scene.start(/[?&]lotta=1/.test(location.search)?'battle':'title')}}
 
 function backdrop(s,dim=0){s.add.image(W/2,H/2,'bg').setDisplaySize(W,H);
  s.add.particles(0,0,'drop',{x:{min:-100,max:W+200},y:-30,speedY:{min:700,max:1000},speedX:-160,rotate:10,lifespan:1100,quantity:2,frequency:20,alpha:{start:.35,end:.08},scale:{min:.6,max:1.2}}).setDepth(1);
@@ -83,7 +83,10 @@ class Title extends Phaser.Scene{constructor(){super('title')}
   muteBtn(this,1220,44).setDepth(d+1);if(SFX.running)SFX.music('title');
   let started=false;const start=()=>{if(started)return;started=true;SFX.init();SFX.music('battle');SFX.play('wave');try{if(this.sys.game.device.input.touch&&!this.scale.isFullscreen){this.scale.startFullscreen();screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{})}}catch(e){}
    this.cameras.main.fadeOut(300,0,0,0);this.time.delayedCall(320,()=>this.scene.start('battle'))};
-  this.input.on('pointerup',p=>{if(p.x>1160&&p.y<95)return;start()});this.input.keyboard.once('keydown-ENTER',start);this.input.keyboard.once('keydown-SPACE',start);
+  // nuovo: pulsante per la stanza di prova (esplorazione in stile JRPG anni '90)
+  const sb=button(this,140,44,250,60,'🚪 STANZA DI PROVA',()=>{this.cameras.main.fadeOut(300,0,0,0);this.time.delayedCall(320,()=>location.href='stanza/?v=5')},COL.cyan,20).setDepth(d+1);
+  this.tweens.add({targets:sb,scale:1.05,duration:800,yoyo:true,repeat:-1,ease:'Sine.inOut'});
+  this.input.on('pointerup',p=>{if(p.x>1160&&p.y<95)return;if(p.x<280&&p.y<90)return;start()});this.input.keyboard.once('keydown-ENTER',start);this.input.keyboard.once('keydown-SPACE',start);
   window.__pc={scene:this,state:'title'}}}
 
 // ---------- BATTAGLIA ----------
@@ -93,6 +96,7 @@ class Battle extends Phaser.Scene{constructor(){super('battle')}
   this.items=JSON.parse(JSON.stringify(ITEMS));this.enemies=[];
   this.party=Object.keys(HEROES).map(k=>{const d=HEROES[k];return{k,hero:1,...d,maxhp:d.hp,maxmp:d.mp,gauge:rnd(20,60),furia:0,st:{},x:HERO_POS[k][0],y:HERO_POS[k][1],alive:true}});
   this.party.forEach(u=>this.spawn(u));this.buildUI();if(SFX.running)SFX.music('battle');
+  else this.input.once('pointerdown',()=>{SFX.init();if(!SFX.mode)SFX.music(this.wave==2?'boss':'battle')});
   this.input.keyboard.on('keydown',e=>this.onKey(e.key));
   this.qteG=this.add.graphics().setDepth(3000);
   window.__pc={scene:this,state:'intro',get wave(){return window.__pc.scene.wave+1},btn:l=>{const b=BTN[l];if(!b||!b.visible||!b.parentContainer&&!b.active)return null;const m=b.getWorldTransformMatrix();return{x:m.tx,y:m.ty}}};

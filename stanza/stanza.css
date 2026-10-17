@@ -1,0 +1,50 @@
+html,body{margin:0;padding:0;width:100%;height:100%;background:#05010a;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;-webkit-touch-callout:none}
+body{position:fixed;inset:0;height:100vh;height:100dvh;font-family:"Trebuchet MS",Arial,sans-serif}
+#wrap{position:fixed;top:env(safe-area-inset-top,0px);bottom:env(safe-area-inset-bottom,0px);left:env(safe-area-inset-left,0px);right:env(safe-area-inset-right,0px);overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1280px;height:720px;transform-origin:0 0;overflow:hidden;background:#000}
+#gl{position:absolute;left:0;top:0;width:1280px;height:720px;display:block}
+#bubble{position:absolute;left:0;top:0;width:58px;height:66px;margin:-66px 0 0 -29px;display:none;align-items:center;justify-content:center;font:900 46px/1 "Trebuchet MS",sans-serif;color:#fff;background:radial-gradient(circle at 50% 40%,#ff2fb3 0%,#7a0a55 70%);border:3px solid #fff;border-radius:50% 50% 50% 50%/45% 45% 55% 55%;box-shadow:0 0 18px #ff2fb3,0 4px 0 #000a;text-shadow:0 2px 0 #000;pointer-events:auto;cursor:pointer;animation:bob .9s ease-in-out infinite}
+#bubble:after{content:"";position:absolute;bottom:-13px;left:50%;margin-left:-8px;border:8px solid transparent;border-top:9px solid #fff}
+#bubble.on{display:flex}
+@keyframes bob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-9px) scale(1.06)}}
+#loc{position:absolute;left:60px;top:70px;color:#fff;opacity:0;transition:opacity 1s,transform 1s;transform:translateX(-30px);pointer-events:none}
+#loc.on{opacity:1;transform:none}
+#loc .l1{font:900 54px "Trebuchet MS",sans-serif;letter-spacing:10px;color:#ff2fb3;text-shadow:0 0 18px #ff2fb3,0 3px 0 #000}
+#loc .l2{font:bold 22px "Trebuchet MS",sans-serif;letter-spacing:3px;color:#9fdcff;border-top:2px solid #00f0ff;padding-top:6px;margin-top:4px;text-shadow:0 2px 0 #000}
+#hud{position:absolute;right:18px;top:16px;display:flex;gap:12px}
+.hb{font:bold 24px "Trebuchet MS",sans-serif;color:#fff;background:#120422dd;border:3px solid #ffd34d;border-radius:14px;padding:10px 18px;box-shadow:0 0 12px #ffd34d55;cursor:pointer}
+#bAct{position:absolute;right:34px;bottom:40px;width:150px;height:150px;border-radius:50%;font:900 26px "Trebuchet MS",sans-serif;color:#fff;background:radial-gradient(circle at 50% 35%,#ff2fb3,#5a0840);border:4px solid #fff;box-shadow:0 0 24px #ff2fb3;display:none;cursor:pointer}
+#bAct.on{display:block}
+#hint{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);white-space:nowrap;font:bold 21px "Trebuchet MS",sans-serif;color:#e8dcff;background:#0a0214cc;border:2px solid #00f0ff88;border-radius:12px;padding:8px 18px;transition:opacity .8s;pointer-events:none}
+#hint b{color:#ff2fb3}
+#joy{position:absolute;width:190px;height:190px;margin:-95px 0 0 -95px;border-radius:50%;border:4px solid #00f0ffaa;background:radial-gradient(circle,#00f0ff22,#00f0ff08 70%);display:none;pointer-events:none}
+#knob{position:absolute;left:50%;top:50%;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff,#00f0ff 60%,#006a80);box-shadow:0 0 18px #00f0ff}
+/* finestra di dialogo stile JRPG classico (versione Punk City) */
+#dlg{position:absolute;left:90px;right:90px;bottom:26px;min-height:170px;padding:30px 44px 26px;border-radius:16px;background:linear-gradient(180deg,#2b0f5ef2 0%,#160636f5 55%,#0b0220f8 100%);border:4px solid #f4ecff;box-shadow:0 0 0 3px #1a0630,0 0 0 6px #ff2fb3,0 0 30px #ff2fb388,inset 0 0 30px #00000088;color:#fff;font:bold 31px/1.45 "Trebuchet MS",sans-serif;text-shadow:2px 2px 0 #000;display:none;cursor:pointer}
+#dlg.on{display:block;animation:pop .18s ease-out}
+@keyframes pop{from{transform:scaleY(.2);opacity:0}to{transform:none;opacity:1}}
+#dname{position:absolute;left:30px;top:-26px;padding:4px 22px;font:900 25px "Trebuchet MS",sans-serif;letter-spacing:2px;background:#0b0220;border:3px solid #f4ecff;border-radius:10px;color:#ffd34d;box-shadow:0 0 0 2px #ff2fb3}
+#dname:empty{display:none}
+#dtext{min-height:90px;white-space:pre-wrap}
+#dtext i{color:#9fdcff;font-style:normal}
+#dnext{position:absolute;right:26px;bottom:12px;color:#ff2fb3;font-size:26px;animation:blink .7s steps(2) infinite;display:none}
+#dnext.on{display:block}
+@keyframes blink{50%{opacity:0}}
+#dchoices{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+#dchoices button{text-align:left;font:bold 29px "Trebuchet MS",sans-serif;color:#fff;background:#ffffff10;border:2px solid #ffffff40;border-radius:10px;padding:8px 18px 8px 52px;position:relative;cursor:pointer}
+#dchoices button.sel{background:#ff2fb340;border-color:#ff2fb3}
+#dchoices button.sel:before{content:"☛";position:absolute;left:14px;color:#ffd34d}
+#fade{position:absolute;inset:0;background:#000;opacity:1;transition:opacity .9s;pointer-events:none}
+#fade.out{opacity:0}
+#start{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:radial-gradient(circle at 50% 45%,#2a0838ee 0%,#05010aff 75%);color:#fff;cursor:pointer;z-index:5}
+#start .t1{font:900 110px "Trebuchet MS",sans-serif;color:#ff2fb3;text-shadow:0 0 30px #ff2fb3,0 6px 0 #000}
+#start .t2{font:bold 30px "Trebuchet MS",sans-serif;color:#00f0ff;letter-spacing:4px}
+#start .t3{margin-top:50px;font:bold 34px "Trebuchet MS",sans-serif;animation:blink 1.4s steps(2) infinite}
+#start small{color:#9fdcff;font-size:20px}
+#start.gone{display:none}
+#rot{display:none;position:fixed;inset:0;background:radial-gradient(circle at 50% 40%,#2a0838 0%,#05010af2 70%);color:#ff2fb3;font:bold 22px "Trebuchet MS",sans-serif;flex-direction:column;align-items:center;justify-content:center;text-align:center;z-index:9;padding:24px;gap:18px;text-shadow:0 0 12px #ff2fb3}
+#rot .ico{font-size:64px;animation:spin 1.8s ease-in-out infinite}
+@keyframes spin{0%,20%{transform:rotate(0)}55%,100%{transform:rotate(-90deg)}}
+#rot small{color:#9fdcff;font-size:15px;text-shadow:none}
+#rot button{font:bold 18px "Trebuchet MS",sans-serif;color:#fff;background:#1a0630;border:2px solid #00f0ff;border-radius:12px;padding:12px 22px;box-shadow:0 0 14px #00f0ff88}
+body.portrait:not(.ok) #rot{display:flex}
