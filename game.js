@@ -30,7 +30,7 @@ const ENEMIES={
  drone:{name:'Drone Vespa',hp:165,atk:37,def:6,spd:14,h:150,flying:1},
  agente:{name:'Agente PCPD',hp:290,atk:42,def:15,spd:9,h:290,shield:1},
  infermiera:{name:'Infermiera Moreau',hp:230,atk:33,def:8,spd:12,h:300},
- mastino:{name:'IL MASTINO',hp:2150,atk:64,def:17,spd:10,h:350,boss:1}};
+ mastino:{name:'IL MASTINO',hp:2100,atk:61,def:17,spd:10,h:350,boss:1}};
 const WAVES=[
  [['ratto',440,470],['drone',290,245],['ratto',170,440]],
  [['agente',430,474],['infermiera',165,445],['drone',320,230]],
@@ -221,7 +221,7 @@ class Battle extends Phaser.Scene{constructor(){super('battle')}
   else if(u.k=='ras'){if(fly&&can('raffica'))a=has('raffica');else if(shielded&&can('fendente')){a=has('fendente');t=shielded}}
   else if(u.k=='lyra'){const avg=this.party.reduce((s,p)=>s+p.hp/p.maxhp,0)/3;if(avg<(window.__pcQ?.6:.45)&&can('scintilla'))a=has('scintilla');else if(shielded&&can('laccio')){a=has('laccio');t=shielded}else if(live.length>=2&&can('vortice'))a=has('vortice')}
   else if(u.k=='sable'){if(live.length>=2&&can('carica'))a=has('carica');else if(boss&&!boss.st.mark&&can('mirino')){a=has('mirino');t=boss}else if(boss&&can('baionetta')&&!boss.st.bleed){a=has('baionetta');t=boss}}
-  if(boss&&boss.charging&&Math.random()<.35&&a.id=='attack')a={id:'guard'};
+  if(boss&&boss.charging&&Math.random()<(window.__pcQ?1:.35)&&a.id=='attack')a={id:'guard'};
   if(a.mp)u.mp-=a.mp;this.refresh();await this.execHero(u,a,t);await this.checkEnd()}
  // --- calcoli
  calc(att,tg,pow,o={}){if(!tg.alive)return null;
