@@ -388,5 +388,18 @@ class Battle extends Phaser.Scene{constructor(){super('battle')}
   button(this,W/2+170,500,300,74,'⌂ TITOLO',()=>{this.setSpeed(1);this.scene.start('title')},COL.cyan,26).setDepth(D+1);
   T(this,W/2,640,'Punk City · prototipo di battaglia · Infinity Frame Studios',16,'#888').setOrigin(.5).setDepth(D+1)}}
 
-new Phaser.Game({type:Phaser.AUTO,parent:'game',width:W,height:H,backgroundColor:'#05010a',
+const game=new Phaser.Game({type:Phaser.AUTO,parent:'game',width:W,height:H,backgroundColor:'#05010a',
  scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH},input:{activePointers:2},scene:[Boot,Title,Battle]});
+window.__game=game;
+// ---------- ROTAZIONE: si riadatta ad ogni giro del telefono, senza ricaricare ----------
+(()=>{const body=document.body;
+ const fit=()=>{const vv=window.visualViewport,w=vv?vv.width:innerWidth,h=vv?vv.height:innerHeight;
+  const touch=('ontouchstart' in window)||navigator.maxTouchPoints>0;body.classList.toggle('portrait',h>w&&(touch||w<900));
+  window.scrollTo(0,0);try{game.scale.refresh()}catch(e){}};
+ let tm=[];const sched=()=>{tm.forEach(clearTimeout);fit();tm=[50,150,350,700,1200].map(ms=>setTimeout(fit,ms))};
+ addEventListener('resize',sched);addEventListener('orientationchange',sched);addEventListener('pageshow',sched);
+ if(window.visualViewport){visualViewport.addEventListener('resize',sched);visualViewport.addEventListener('scroll',()=>window.scrollTo(0,0))}
+ if(screen.orientation&&screen.orientation.addEventListener)screen.orientation.addEventListener('change',sched);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)sched()});
+ const ok=document.getElementById('rotok');if(ok)ok.addEventListener('click',()=>{body.classList.add('ok');sched()});
+ game.events.once('ready',sched);sched();window.__fit=sched})();
