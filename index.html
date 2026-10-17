@@ -1,0 +1,18 @@
+<!DOCTYPE html><html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#05010a">
+<title>Punk City – Prototipo di Battaglia</title>
+<style>
+html,body{margin:0;height:100%;background:#05010a;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+#game{position:fixed;inset:0}
+#rot{display:none;position:fixed;inset:0;background:#05010aee;color:#ff2fb3;font:bold 22px "Trebuchet MS",sans-serif;flex-direction:column;align-items:center;justify-content:center;text-align:center;z-index:9;padding:24px;gap:18px}
+#rot button{font:bold 18px "Trebuchet MS",sans-serif;color:#fff;background:#1a0630;border:2px solid #00f0ff;border-radius:12px;padding:12px 22px}
+@media (orientation:portrait) and (max-width:900px){body:not(.ok) #rot{display:flex}}
+</style></head><body>
+<div id="game"></div>
+<div id="rot"><div style="font-size:54px">📱↻</div><div>Gira il telefono in orizzontale<br>per giocare a Punk City</div><button onclick="document.body.classList.add('ok')">Gioca lo stesso</button></div>
+<script src="lib/phaser.min.js"></script>
+<script src="enemies.js?v=1"></script>
+<script src="game.js?v=1"></script>
+</body></html>
