@@ -189,7 +189,7 @@ const ctrl={path:[],joy:null,keys:{},target:null,pending:null};
 let ptr=null;
 stage.addEventListener('pointerdown',e=>{if(e.target.closest('button,#dlg,#bubble,#start'))return;if(dlg.open||busy)return;e.preventDefault();const[x,y]=toStage(e);ptr={id:e.pointerId,x0:x,y0:y,t0:performance.now(),joy:false};try{stage.setPointerCapture(e.pointerId)}catch(_){}});
 stage.addEventListener('pointermove',e=>{if(!ptr||e.pointerId!=ptr.id)return;const[x,y]=toStage(e),dx=x-ptr.x0,dy=y-ptr.y0;
- if(!ptr.joy&&Math.hypot(dx,dy)>22){ptr.joy=true;ctrl.path=[];ctrl.pending=null;const j=$('joy');j.style.display='block';j.style.left=ptr.x0+'px';j.style.top=ptr.y0+'px'}
+ if(!ptr.joy&&Math.hypot(dx,dy)>22){ptr.joy=true;hideHint();ctrl.path=[];ctrl.pending=null;const j=$('joy');j.style.display='block';j.style.left=ptr.x0+'px';j.style.top=ptr.y0+'px'}
  if(ptr.joy){const L=Math.hypot(dx,dy),m=Math.min(L,80),nx=dx/(L||1),ny=dy/(L||1);$('knob').style.transform=`translate(${nx*m}px,${ny*m}px)`;ctrl.joy=L>12?[nx*Math.min(1,L/60),ny*Math.min(1,L/60)]:null}});
 const endPtr=e=>{if(!ptr||e.pointerId!=ptr.id)return;const p=ptr;ptr=null;$('joy').style.display='none';$('knob').style.transform='';ctrl.joy=null;
  if(!p.joy&&e.type=='pointerup')tapAt(p.x0,p.y0)};
@@ -239,7 +239,7 @@ function step(dt){t+=dt;
  // movimento
  let mvx=0,mvz=0;const K=ctrl.keys;
  if(!dlg.open&&!busy&&!ctrl.lock){const kx=(K['arrowright']||K['d']?1:0)-(K['arrowleft']||K['a']?1:0),kz=(K['arrowdown']||K['s']?1:0)-(K['arrowup']||K['w']?1:0);
-  if(kx||kz){ctrl.path=[];ctrl.pending=null;const L=Math.hypot(kx,kz);mvx=kx/L;mvz=kz/L}
+  if(kx||kz){hideHint();ctrl.path=[];ctrl.pending=null;const L=Math.hypot(kx,kz);mvx=kx/L;mvz=kz/L}
   else if(ctrl.joy){mvx=ctrl.joy[0];mvz=ctrl.joy[1]}}
  const sp=SPEED*ras.s*dt;let moving=false;
  if(mvx||mvz){const nx=ras.x+mvx*sp,ny=ras.y+mvz*sp/DEPTH;
