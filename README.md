@@ -35,3 +35,14 @@ Si apre dal pulsante **🚪 STANZA DI PROVA** nel menu, oppure direttamente: `st
 - Il **!** sopra la testa indica qualcosa da guardare: Kiri, il grammofono (cambia la musica), le casse dei Varga, la porta.
 - La porta porta direttamente alla battaglia nel Vicolo Neon (`?lotta=1`).
 - Musica d'ambiente generata dal browser (pioggia, pad, carillon), passi sul legno.
+
+## ⚔ Battaglia 3D (prototipo) — `/battaglia/`
+
+Battaglia a turni in stile JRPG con il nostro look: Vicolo Neon in 3D (pioggia, neon, riflessi nelle pozzanghere), Ras e Kiri contro 2 Ratti di Ferro e un Drone Vespa.
+
+- Raggiungibile dal menu principale (**⚔ BATTAGLIA 3D**) e dalla porta del Covo (**⚔ Battaglia 3D (nuova)**). Il combattimento action classico resta com'era.
+- Barre ATB (modalità "attesa": si fermano mentre scegli). Menu: **Attacca · Tecnica/Hack · Oggetto · Difendi**.
+- Ras: Taglio Alba, Lama Rotante. Kiri: Cortocircuito (×2 sul drone), Virus Neon, Rattoppo (cura). Oggetti: Medikit, Stim Neon, Granata EMP.
+- Camera dinamica (giro d'apertura, zoom sugli attacchi, scossoni), transizione a vetro rotto/vortice, numeri danno, lampi sui colpi, posa di vittoria + fanfara e schermata risultati.
+- Touch (iPhone orizzontale) e desktop (mouse o frecce/Invio/Esc).
+- Modelli 3D condivisi con il Covo: `lib/pc-models.js`.

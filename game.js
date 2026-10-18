@@ -84,9 +84,10 @@ class Title extends Phaser.Scene{constructor(){super('title')}
   let started=false;const start=()=>{if(started)return;started=true;SFX.init();SFX.music('battle');SFX.play('wave');try{if(this.sys.game.device.input.touch&&!this.scale.isFullscreen){this.scale.startFullscreen();screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(()=>{})}}catch(e){}
    this.cameras.main.fadeOut(300,0,0,0);this.time.delayedCall(320,()=>this.scene.start('battle'))};
   // nuovo: pulsante per la stanza di prova (esplorazione in stile JRPG anni '90)
-  const sb=button(this,140,44,250,60,'🚪 STANZA DI PROVA',()=>{this.cameras.main.fadeOut(300,0,0,0);this.time.delayedCall(320,()=>location.href='stanza/?v=5')},COL.cyan,20).setDepth(d+1);
+  const sb=button(this,140,44,250,60,'🚪 STANZA DI PROVA',()=>{this.cameras.main.fadeOut(300,0,0,0);this.time.delayedCall(320,()=>location.href='stanza/?v=6')},COL.cyan,20).setDepth(d+1);
   this.tweens.add({targets:sb,scale:1.05,duration:800,yoyo:true,repeat:-1,ease:'Sine.inOut'});
-  this.input.on('pointerup',p=>{if(p.x>1160&&p.y<95)return;if(p.x<280&&p.y<90)return;start()});this.input.keyboard.once('keydown-ENTER',start);this.input.keyboard.once('keydown-SPACE',start);
+  const b3=button(this,140,118,250,60,'⚔ BATTAGLIA 3D',()=>{this.cameras.main.fadeOut(300,0,0,0);this.time.delayedCall(320,()=>location.href='battaglia/?v=6')},COL.pink,20).setDepth(d+1);
+  this.input.on('pointerup',p=>{if(p.x>1160&&p.y<95)return;if(p.x<280&&p.y<160)return;start()});this.input.keyboard.once('keydown-ENTER',start);this.input.keyboard.once('keydown-SPACE',start);
   window.__pc={scene:this,state:'title'}}}
 
 // ---------- BATTAGLIA ----------

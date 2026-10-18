@@ -1,7 +1,8 @@
 // PUNK CITY – Stanza di prova "Il Covo": sfondo dipinto + personaggio 3D low-poly (Three.js),
 // area calpestabile invisibile, maschere di occlusione, '!' e dialoghi JRPG, musica WebAudio.
-import * as THREE from '../lib/three.module.min.js?v=5';
-const V='5',W=1280,H=720,$=id=>document.getElementById(id);
+import * as THREE from '../lib/three.module.min.js?v=6';
+import {makeRas as mkRas,makeKiri as mkKiri} from '../lib/pc-models.js?v=6';
+const V='6',W=1280,H=720,$=id=>document.getElementById(id);
 const ASSET=n=>'assets/'+n+'?v='+V;
 
 // ---------------- DATI DELLA STANZA (coordinate in pixel dello sfondo 1280x720) ----------------
@@ -87,61 +88,11 @@ const keyL=new THREE.DirectionalLight(0xffb070,1.7);keyL.position.set(-1,1.2,1.4
 const pinkL=new THREE.DirectionalLight(0xff3cc0,.6);pinkL.position.set(1.4,.6,.2);scene.add(pinkL);
 const rimL=new THREE.DirectionalLight(0x60c8ff,1.5);rimL.position.set(.2,.8,-1.5);scene.add(rimL);
 
-// ---------------- PERSONAGGI LOW-POLY (fatti a mano con forme semplici, stile cel-shading) ----------------
-const grad=(()=>{const d=new Uint8Array([70,70,70,255,150,150,150,255,255,255,255,255]);const t=new THREE.DataTexture(d,3,1,THREE.RGBAFormat);t.minFilter=t.magFilter=THREE.NearestFilter;t.needsUpdate=true;return t})();
-const OUT=new THREE.MeshBasicMaterial({color:0x06020a,side:THREE.BackSide,transparent:true});
-const MAT={};const mat=(c,e=0,ds=false)=>{const k=c+'_'+e+'_'+ds;return MAT[k]||(MAT[k]=new THREE.MeshToonMaterial({color:c,gradientMap:grad,emissive:e||0x000000,transparent:true,side:ds?THREE.DoubleSide:THREE.FrontSide,flatShading:true}))};
-function P(parent,geo,col,pos,o={}){const m=new THREE.Mesh(geo,mat(col,o.e,o.ds));m.position.set(...pos);if(o.rot)m.rotation.set(...o.rot);if(o.sc)m.scale.set(...o.sc);parent.add(m);
- if(o.line!==false){const l=new THREE.Mesh(geo,OUT);l.scale.setScalar(o.line||1.12);m.add(l)}return m}
-const box=(w,h,d)=>new THREE.BoxGeometry(w,h,d),cyl=(a,b,h,s=6,open=false,t0=0,tl=Math.PI*2)=>new THREE.CylinderGeometry(a,b,h,s,1,open,t0,tl),ico=(r,d=1)=>new THREE.IcosahedronGeometry(r,d);
-function limb(parent,x,y,len,w,col,{foot,hand,cyber}={}){const g=new THREE.Group();g.position.set(x,y,0);parent.add(g);
- P(g,cyl(w*.6,w*.5,len*.54,7),col,[0,-len*.26,0]);const lo=new THREE.Group();lo.position.y=-len*.5;g.add(lo);P(lo,cyl(w*.5,w*.42,len*.52,7),cyber?0x46404e:col,[0,-len*.25,0]);
- if(cyber){[-.1,-.22,-.34].forEach(yy=>P(lo,cyl(w*.53,w*.5,.016,8),0xffa040,[0,len*yy,0],{e:0xff8a20,line:false}))}
- if(foot)P(lo,box(w*1.05,.06,w*1.7),0x0d0b10,[0,-len*.5,w*.3]);
- if(hand)P(lo,ico(w*.55,0),cyber?0x5a5060:0xd29a78,[0,-len*.52,0]);
- return{g,lo}}
-function makeRas(){const root=new THREE.Group(),tilt=new THREE.Group(),yaw=new THREE.Group(),body=new THREE.Group();root.add(tilt);tilt.add(yaw);yaw.add(body);tilt.rotation.x=.42;
- const BL=0x231c27,BL2=0x30263a;
- const L=limb(body,-.055,.47,.44,.075,0x1b1820,{foot:1}),R=limb(body,.055,.47,.44,.075,0x1b1820,{foot:1});
- P(body,box(.19,.08,.12),0x1b1820,[0,.48,0]);P(body,box(.05,.035,.01),0xd8a640,[0,.485,.062],{e:0x402800,line:false});
- const torso=new THREE.Group();torso.position.y=.5;body.add(torso);
- P(torso,cyl(.1,.085,.27,6),0x6e1624,[0,.135,0],{sc:[1,1,.62]});                       // gilet bordeaux
- P(torso,box(.012,.12,.004),0xd8a640,[.03,.14,.058],{rot:[0,0,.5],line:false,e:0x302000}); // catenella
- P(torso,cyl(.15,.105,.12,8),BL,[0,.25,0],{sc:[1,1,.62]});                                // spalle del cappotto
- P(torso,box(.05,.27,.012),BL2,[-.075,.13,.06],{rot:[0,0,-.12]});P(torso,box(.05,.27,.012),BL2,[.075,.13,.06],{rot:[0,0,.12]}); // risvolti
- const coatG=cyl(.12,.2,.48,10,true,.55,Math.PI*2-1.1);coatG.translate(0,-.24,0);              // cappotto lungo, aperto davanti
- const coat=P(torso,coatG,BL,[0,.17,-.004],{sc:[1,1,.78],line:1.03});
- const lin=new THREE.Mesh(coatG,new THREE.MeshToonMaterial({color:0x6a1422,gradientMap:grad,side:THREE.BackSide,transparent:true}));coat.add(lin);
- P(torso,box(.22,.08,.15),BL,[0,.33,-.01],{rot:[-.15,0,0]});                               // colletto alto
- P(torso,box(.06,.012,.01),0x9a1020,[0,.3,.07],{e:0x300008,line:false});
- const armL=limb(torso,.165,.27,.36,.072,BL,{hand:1,cyber:1}),armR=limb(torso,-.165,.27,.36,.072,BL,{hand:1});
- P(torso,cyl(.035,.035,.05,6),0xd29a78,[0,.35,0],{line:false});
- const head=new THREE.Group();head.position.y=.44;torso.add(head);
- head.scale.setScalar(1.18);P(head,ico(.078,1),0xe0a988,[0,.0,0],{sc:[1,1.12,1]});
- P(head,box(.018,.012,.01),0x120a10,[-.03,.01,.074],{line:false});P(head,box(.018,.012,.01),0x120a10,[.03,.01,.074],{line:false});
- P(head,ico(.086,1),0x15121a,[0,.035,-.018],{sc:[1.04,.82,1.04]});P(head,box(.13,.03,.04),0x15121a,[-.01,.06,.062],{rot:[.5,0,-.18]});
- [[-.05,.07,.03,.6],[0,.09,.04,.1],[.05,.075,.02,-.6],[0,.06,-.07,0]].forEach(([x,y,z,r])=>P(head,new THREE.ConeGeometry(.035,.09,4),0x120f16,[x,y,z],{rot:[-.5,0,r]}));
- P(head,box(.03,.05,.07),0xd0182c,[.045,.07,.04],{e:0x500008,rot:[-.4,0,-.3]});           // ciuffo rosso
- const sw=new THREE.Group();sw.position.set(0,.2,-.09);sw.rotation.z=.75;torso.add(sw);    // katana sulla schiena
- P(sw,box(.024,.5,.008),0x2a0c12,[0,.08,0],{e:0x7a0818});P(sw,box(.006,.5,.01),0xff3050,[.012,.08,0],{e:0xff1030,line:false});
- P(sw,box(.08,.016,.03),0x9a1020,[0,-.17,0]);P(sw,box(.02,.12,.02),0x0b080c,[0,-.24,0]);
- root.userData={tilt,yaw,body,L,R,armL,armR,torso,head,coat};return root}
-function makeKiri(){const root=new THREE.Group(),tilt=new THREE.Group(),yaw=new THREE.Group(),body=new THREE.Group();root.add(tilt);tilt.add(yaw);yaw.add(body);tilt.rotation.x=.42;
- const C=0x2a3d4c,C2=0x3a5464;
- const L=limb(body,-.045,.46,.43,.062,0x161a22,{foot:1}),R=limb(body,.045,.46,.43,.062,0x161a22,{foot:1});
- P(body,box(.012,.12,.03),0xa0c8d8,[.075,.36,.02],{e:0x103040,line:false});               // kunai sulla coscia
- const torso=new THREE.Group();torso.position.y=.48;body.add(torso);
- P(torso,cyl(.085,.075,.28,6),C2,[0,.14,0],{sc:[1,1,.65]});
- P(torso,cyl(.12,.17,.42,8,true,.9,Math.PI*2-1.8),C,[0,-.03,-.01],{ds:true,line:1.04});   // mantello aperto
- P(torso,cyl(.06,.13,.12,8),0x2a6070,[0,.28,0],{e:0x08202a});                             // sciarpa
- const armL=limb(torso,.13,.26,.33,.058,C,{hand:1}),armR=limb(torso,-.13,.26,.33,.058,C,{hand:1});
- armL.g.rotation.set(-.55,0,-.12);armR.g.rotation.set(-.55,0,.12);armL.lo.rotation.set(-1.5,0,0);armR.lo.rotation.set(-1.5,0,0);armL.lo.rotation.order=armR.lo.rotation.order='YXZ';armL.lo.rotation.y=-.9;armR.lo.rotation.y=.9;  // braccia conserte
- const head=new THREE.Group();head.position.y=.41;torso.add(head);
- P(head,ico(.07,1),0xc89a80,[0,0,0],{sc:[1,1.1,1]});
- P(head,new THREE.ConeGeometry(.1,.2,7,1,true),C,[0,.05,-.01],{ds:true,line:1.05});        // cappuccio
- P(head,ico(.012,0),0x00f0ff,[.028,.012,.066],{e:0x00d0ff,line:false});                    // impianto oculare
- P(head,box(.016,.01,.01),0x120a10,[-.028,.012,.068],{line:false});
- root.userData={tilt,yaw,body,L,R,armL,armR,torso,head};return root}
+// ---------------- PERSONAGGI 3D (gli stessi della battaglia 3D: lib/pc-models.js) ----------------
+function wrap(model){const root=new THREE.Group(),tilt=new THREE.Group(),yaw=new THREE.Group();root.add(tilt);tilt.add(yaw);yaw.add(model);tilt.rotation.x=.42;root.userData={...model.userData,tilt,yaw};return root}
+function makeRas(){return wrap(mkRas({sword:'back'}))}
+function makeKiri(){const m=mkKiri(),d=m.userData;   // braccia conserte, guarda fuori dalla finestra
+ d.armL.g.rotation.set(-.55,0,-.12);d.armR.g.rotation.set(-.55,0,.12);d.armL.lo.rotation.order=d.armR.lo.rotation.order='YXZ';d.armL.lo.rotation.set(-1.5,-.9,0);d.armR.lo.rotation.set(-1.5,.9,0);return wrap(m)}
 function shadowBlob(){const m=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({map:GT,color:0x000000,transparent:true,opacity:.65,depthTest:false,depthWrite:false}));scene.add(m);return m}
 
 function actor(model,x,y,yaw){const a={m:model,x,y,yaw,tyaw:yaw,ph:0,moving:0,sh:shadowBlob(),meshes:[]};model.traverse(o=>{if(o.isMesh)a.meshes.push(o)});scene.add(model);place(a);return a}
@@ -179,8 +130,8 @@ const SPOTS=[
  {id:'disco',x:338,y:520,r:85,face:[220,440],talk(){if(AU.mode=='disco'){AU.setMode('ambient');AU.play('vinyl');return[[N,'Ras alza la puntina. Il disco si ferma.']]}
    const l=this.done?[[N,'Ras rimette la puntina sul disco.']]:[[N,'Un grammofono vecchio, con un\'antenna saldata sul fianco.'],[RAS,'Mia madre ne aveva uno uguale. Diceva che la musica vecchia non si spegne da lontano.'],[N,'Ras appoggia la puntina sul disco.']];this.done=1;return l},end(){if(AU.mode!='disco'){AU.setMode('disco');AU.play('vinyl')}}},
  {id:'casse',x:872,y:470,r:80,face:[960,450],talk(){const l=this.done?[[N,'Impianti Neurolink. Ancora nella plastica.']]:[[N,'Casse con il marchio dei Varga. Il sigillo è stato forzato.'],[N,'Dentro ci sono impianti Neurolink nuovi, ancora nella plastica.'],[RAS,'Li vendono come cura. Qualcuno li sta portando quaggiù.'],[RAS,'Domani voglio sapere chi.']];this.done=1;return l}},
- {id:'porta',x:952,y:332,r:70,face:[952,250],talk(){return[[N,'La porta dà sul Vicolo Neon. Fuori piove. Si sente il ronzio di un drone.'],[N,'Uscire?',[['Esci nel vicolo (battaglia)','go'],['Resta nel Covo','stay']]]]},
-  choice(v){if(v=='go')exitToBattle()}}];
+ {id:'porta',x:952,y:332,r:70,face:[952,250],talk(){return[[N,'La porta dà sul Vicolo Neon. Fuori piove. Si sente il ronzio di un drone.'],[N,'Uscire?',[['⚔ Battaglia 3D (nuova)','b3d'],['Battaglia classica','go'],['Resta nel Covo','stay']]]]},
+  choice(v){if(v=='go')exitToBattle('../?lotta=1&v='+V);if(v=='b3d')exitToBattle('../battaglia/?v='+V,true)}}];
 
 // ---------------- INPUT ----------------
 const stage=$('stage');let SC=1,OX=0,OY=0;
@@ -229,9 +180,19 @@ function interact(s){if(dlg.open||busy)return;ctrl.path=[];ras.tyaw=Math.atan2(s
 
 // ---------------- USCITA: dissolvenza verso la battaglia ----------------
 function leave(url){if(busy)return;busy=true;AU.fadeOut();$('fade').classList.remove('out');setTimeout(()=>location.href=url,950)}
-function exitToBattle(){busy=true;ctrl.path=[];AU.play('door');const door=[952,318];
- // Ras entra nella porta, poi tutto sfuma
- ctrl.path=[[door[0],door[1]+4]];busy=false;ctrl.lock=true;setTimeout(()=>{busy=false;leave('../?lotta=1&v='+V)},700)}
+function exitToBattle(url,shatter){busy=true;ctrl.path=[];AU.play('door');const door=[952,318];
+ ctrl.path=[[door[0],door[1]+4]];busy=false;ctrl.lock=true;setTimeout(()=>{if(shatter)shatterTo(url);else leave(url)},700)}
+// transizione verso la battaglia 3D: lo schermo si rompe in schegge di vetro con crepe al neon
+function shatterTo(url){busy=true;AU.play('bang');renderer.render(scene,cam);let img;try{img=canvas.toDataURL('image/jpeg',.85)}catch(e){leave(url);return}
+ const box=document.createElement('div');box.style.cssText='position:absolute;inset:0;z-index:20;overflow:hidden;background:radial-gradient(circle,#ff2fb3 0%,#2a0838 45%,#000 80%)';stage.appendChild(box);
+ const C=6,R=4,cw=W/C,ch=H/R,sh=[];const jit=()=>(Math.random()-.5)*40;const P=[];for(let j=0;j<=R;j++){P[j]=[];for(let i=0;i<=C;i++)P[j][i]=[i*cw+(i%C?jit():0),j*ch+(j%R?jit():0)]}
+ for(let j=0;j<R;j++)for(let i=0;i<C;i++){const a=P[j][i],b=P[j][i+1],c=P[j+1][i+1],d=P[j+1][i];const tris=Math.random()<.5?[[a,b,c],[a,c,d]]:[[a,b,d],[b,c,d]];
+  tris.forEach(t=>{const e=document.createElement('div');e.style.cssText=`position:absolute;inset:0;background:url(${img}) 0 0/1280px 720px;clip-path:polygon(${t.map(p=>p[0]+'px '+p[1]+'px').join(',')});transition:transform .9s cubic-bezier(.5,0,.8,.4),opacity .9s ease-in`;box.appendChild(e);
+   const cx=(t[0][0]+t[1][0]+t[2][0])/3-W/2,cy=(t[0][1]+t[1][1]+t[2][1])/3-H/2;sh.push([e,cx,cy])})}
+ const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('width',W);svg.setAttribute('height',H);svg.style.cssText='position:absolute;inset:0';
+ for(let j=0;j<=R;j++)for(let i=0;i<=C;i++){[[0,1],[1,0],[1,1]].forEach(([dj,di])=>{if(P[j+dj]&&P[j+dj][i+di]){const l=document.createElementNS('http://www.w3.org/2000/svg','line');const p=P[j][i],q=P[j+dj][i+di];l.setAttribute('x1',p[0]);l.setAttribute('y1',p[1]);l.setAttribute('x2',q[0]);l.setAttribute('y2',q[1]);l.setAttribute('stroke','#ffb0e8');l.setAttribute('stroke-width','3');svg.appendChild(l)}})}
+ box.appendChild(svg);setTimeout(()=>{svg.style.transition='opacity .3s';svg.style.opacity=0;sh.forEach(([e,cx,cy])=>{const k=1.2+Math.random();e.style.transform=`translate(${cx*k}px,${cy*k+300}px) rotate(${(Math.random()-.5)*120}deg) scale(.7)`;e.style.opacity=0})},260);
+ window.__st.state='shatter';setTimeout(()=>{AU.fadeOut();if(!window.__noNav)location.href=url},1150)}
 
 // ---------------- CICLO PRINCIPALE ----------------
 let last=performance.now(),started=false,isReady=false,t=0;
